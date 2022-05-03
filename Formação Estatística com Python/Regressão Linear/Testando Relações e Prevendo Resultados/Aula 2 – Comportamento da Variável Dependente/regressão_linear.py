@@ -95,7 +95,12 @@ dados.corr().round(4)
 https://pandas.pydata.org/pandas-docs/stable/visualization.html
 """
 
+fig, ax = plt.subplots(figsize = (20,6))
 
+ax.set_title('Consumo de Cerveja', fontsize=20)
+ax.set_ylabel('Litros', fontsize=16)
+ax.set_xlabel('Dias', fontsize=16)
+ax = dados['consumo'].plot()
 
 """# <font color='red' style='font-size: 30px;'>Box Plot</font>
 <hr style='border: 2px solid red;'>
@@ -107,14 +112,18 @@ https://seaborn.pydata.org/
 <p style='font-size: 18px; line-height: 2; margin: 10px 50px; text-align: justify;'>O Seaborn é uma biblioteca Python de visualização de dados baseada no matplotlib. Ela fornece uma interface de alto nível para desenhar gráficos estatísticos.</p>
 """
 
-
+import seaborn as sns
 
 """## Box plot da variável *dependente* (y)
 
 https://seaborn.pydata.org/generated/seaborn.boxplot.html?highlight=boxplot#seaborn.boxplot
 """
 
-
+ax = sns.boxplot(data=dados.consumo, orient='v', width=0.2)
+ax.figure.set_size_inches(12,6)
+ax.set_title('Consumo de Cerveja', fontsize=20)
+ax.set_ylabel('Litros', fontsize=16)
+ax
 
 """# <font color='red' style='font-size: 30px;'>Box Plot com Duas Variáveis</font>
 <hr style='border: 2px solid red;'>
@@ -122,7 +131,14 @@ https://seaborn.pydata.org/generated/seaborn.boxplot.html?highlight=boxplot#seab
 ## Investigando a variável *dependente* (y) segundo determinada característica
 """
 
+dados.head(0)
 
+ax = sns.boxplot(data=dados, y='consumo', x='fds', orient='v', width=0.2)
+ax.figure.set_size_inches(12,6)
+ax.set_title('Consumo de Cerveja', fontsize=20)
+ax.set_ylabel('Litros', fontsize=16)
+ax.set_xlabel('Final de Semana', fontsize=16)
+ax
 
 """## Configurações de estilo e cor da biblioteca *seaborn*
 
@@ -143,9 +159,15 @@ https://seaborn.pydata.org/generated/seaborn.boxplot.html?highlight=boxplot#seab
 > https://seaborn.pydata.org/tutorial/color_palettes.html#palette-tutorial
 """
 
+sns.set_palette("Accent")
+sns.set_style("darkgrid")
 
-
-
+ax = sns.boxplot(data=dados, y='consumo', x='fds', orient='v', width=0.3)
+ax.figure.set_size_inches(12,6)
+ax.set_title('Consumo de Cerveja', fontsize=20)
+ax.set_ylabel('Litros', fontsize=16)
+ax.set_xlabel('Final de Semana', fontsize=16)
+ax
 
 """# <font color='red' style='font-size: 30px;'>Distribuição de Frequências</font>
 <hr style='border: 2px solid red;'>
@@ -155,7 +177,11 @@ https://seaborn.pydata.org/generated/seaborn.boxplot.html?highlight=boxplot#seab
 https://seaborn.pydata.org/generated/seaborn.distplot.html?highlight=distplot#seaborn.distplot
 """
 
-
+ax = sns.distplot(dados.consumo)
+ax.figure.set_size_inches(12,6)
+ax.set_title('Distribuição de Frequência', fontsize=20)
+ax.set_ylabel('Consumo de Cerveja (Litros)', fontsize=16)
+ax
 
 """# <font color='red' style='font-size: 30px;'>Variável Dependente X Variáveis Explicativas (pairplot)</font>
 <hr style='border: 2px solid red;'>

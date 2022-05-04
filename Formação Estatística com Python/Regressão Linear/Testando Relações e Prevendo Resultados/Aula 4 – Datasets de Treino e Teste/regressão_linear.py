@@ -278,29 +278,29 @@ ax
 https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
 """
 
-
+from sklearn.model_selection import train_test_split
 
 """## Criando uma Series (pandas) para armazenar o Consumo de Cerveja (y)"""
 
-
+y = dados.consumo
 
 """## Criando um DataFrame (pandas) para armazenar as variáveis explicativas (X)"""
 
-
+X = dados[['temp_max','chuva','fds']]
 
 """## Criando os datasets de treino e de teste"""
 
-
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=2811)
 
 """## Verificando os tamanhos dos arquivos gerados pela função *train_test_split*"""
 
+X_train.shape
 
+X_test.shape
 
+y_train.shape
 
-
-
-
-
+y_test.shape
 
 
 
@@ -313,18 +313,19 @@ https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearReg
 https://scikit-learn.org/stable/modules/classes.html#regression-metrics
 """
 
-
+from sklearn.linear_model import LinearRegression
+from sklearn import metrics
 
 """## Instanciando a classe *LinearRegression()*"""
 
-
+modelo = LinearRegression()
 
 """## Utilizando o método *fit()* do objeto "modelo" para estimar nosso modelo linear utilizando os dados de TREINO (y_train e X_train)
 
 https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression.fit
 """
 
-
+modelo.fit(X_train, y_train)
 
 """## Obtendo o coeficiente de determinação (R²) do modelo estimado com os dados de TREINO
 
@@ -337,21 +338,21 @@ O coeficiente de determinação (R²) é uma medida resumida que diz quanto a li
 $$R^2(y, \hat{y}) = 1 - \frac {\sum_{i=0}^{n-1}(y_i-\hat{y}_i)^2}{\sum_{i=0}^{n-1}(y_i-\bar{y}_i)^2}$$
 """
 
-
+print(f'R² = {modelo.score(X_train, y_train).round(2)}')
 
 """## Gerando previsões para os dados de TESTE (X_test) utilizando o método *predict()* do objeto "modelo"
 
 https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression.predict
 """
 
-
+y_previsto = modelo.predict(X_test)
 
 """## Obtendo o coeficiente de determinação (R²) para as previsões do nosso modelo
 
 https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#sklearn.metrics.r2_score
 """
 
-
+print(f'R² = {metrics.r2_score(y_test, y_previsto).round(2)}')
 
 """# <font color='red' style='font-size: 30px;'>Obtendo Previsões Pontuais</font>
 <hr style='border: 2px solid red;'>
@@ -359,15 +360,21 @@ https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#
 ## Dados de entrada
 """
 
-
+entrada = X_test[0:1]
+entrada
 
 """## Gerando previsão pontual"""
 
-
+modelo.predict(entrada)[0]
 
 """## Criando um simulador simples"""
 
+temp_max = 40
+chuva = 0
+fds = 1
+entrada = [[temp_max, chuva, fds]]
 
+print(f'{modelo.predict(entrada)[0].round(2)} litros')
 
 """# <font color='red' style='font-size: 30px;'>Interpretação dos Coeficientes Estimados</font>
 <hr style='border: 2px solid red;'>
@@ -379,33 +386,33 @@ https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html#
 <p style='font-size: 20px; line-height: 2; margin: 10px 50px; text-align: justify;'>O <b>intercepto</b> representa o efeito médio em $Y$ (Consumo de Cerveja) tendo todas as variáveis explicativas excluídas do modelo. De forma mais simples, o <b>intercepto</b> representa o efeito médio em $Y$ (Consumo de Cerveja) quando $X_2$ (Temperatura Máxima), $X_3$ (Chuva) e $X_4$ (Final de Semana) são iguais a zero.</p>
 """
 
+modelo.intercept_
 
-
-
+type(modelo.intercept_)
 
 """## Obtendo os coeficientes de regressão
 
 <p style='font-size: 20px; line-height: 2; margin: 10px 50px; text-align: justify;'>Os <b>coeficientes de regressão</b> $\beta_2$, $\beta_3$ e $\beta_4$ são conhecidos como <b>coeficientes parciais de regressão</b> ou <b>coeficientes parciais angulares</b>. Considerando o número de variáveis explicativas de nosso modelo, seu significado seria o seguinte: $\beta_2$ mede a variação no valor médio de $Y$ (Consumo de Cerveja), por unidade de variação em $X_2$ (Temperatura Máxima), mantendo-se os valores de $X_3$ (Chuva) e $X_4$ (Final de Semana) constantes. Em outras palavras, ele nos dá o efeito "direto" ou "líquido" de uma unidade de variação em $X_2$ sobre o valor médio de $Y$, excluídos os efeitos que $X_3$ e $X_4$ possam ter sobre a média de $Y$. De modo análogo podemos interpretar os demais coeficientes de regressão.</p>
 """
 
+modelo.coef_
 
-
-
+type(modelo.coef_)
 
 """## Confirmando a ordem das variáveis explicativas no DataFrame"""
 
-
+X.columns
 
 """## Criando uma lista com os nomes das variáveis do modelo"""
 
-
+index = ['Intercepto', 'Temperatura Máxima', 'Chuva (mm)', 'Final de Semana']
 
 """## Criando um DataFrame para armazenar os coeficientes do modelo
 
 https://docs.scipy.org/doc/numpy/reference/generated/numpy.append.html?#numpy.append
 """
 
-
+pd.DataFrame(data=np.append(modelo.intercept_, modelo.coef_), index=index, columns=['Parâmetros'])
 
 """## Interpretação dos Coeficientes Estimados
 
@@ -431,37 +438,58 @@ https://docs.scipy.org/doc/numpy/reference/generated/numpy.append.html?#numpy.ap
 ## Gerando as previsões do modelo para os dados de TREINO
 """
 
-
+y_previsto_train = modelo.predict(X_train)
 
 """## Gráfico de dispersão entre valor estimado e valor real
 
 https://seaborn.pydata.org/generated/seaborn.scatterplot.html
 """
 
-
+ax = sns.scatterplot(x=y_previsto_train, y=y_train)
+ax.figure.set_size_inches(12, 6)
+ax.set_title('Previsão X Real', fontsize=18)
+ax.set_xlabel('Consumo de Cerveja (litros) - Previsão', fontsize=14)
+ax.set_ylabel('Consumo de Cerveja (litros) - Real', fontsize=14)
+ax
 
 """## Obtendo os resíduos"""
 
+residuo = y_train - y_previsto_train
 
+residuo
 
 """## Gráfico de dispersão entre valor estimado e resíduos
 
 Método informal de verificação da hipótese de variância constante dos resíduos (homocedasticidade)
 """
 
-
+ax = sns.scatterplot(x=y_previsto_train, y=residuo, s=100)
+ax.figure.set_size_inches(20, 8)
+ax.set_title('Resíduos X Previsão', fontsize=18)
+ax.set_xlabel('Consumo de Cerveja (litros) - Previsão', fontsize=14)
+ax.set_ylabel('Resíduos', fontsize=14)
+ax
 
 """## Utilizando os resíduos ao quadrado
 
-<img width='800px' src='../Dados/img/var_u.jpg'>
+<img width='800px' src='/content/drive/MyDrive/Colab Notebooks/Formação Estatística com Python/Regressão Linear/Testando Relações e Prevendo Resultados/img/var_u.jpg'>
 Fonte: Econometria Básica - 5ª edição - Gujarati e Porter
 """
 
-
+ax = sns.scatterplot(x=y_previsto_train, y=residuo**2, s=150)
+ax.figure.set_size_inches(20, 8)
+ax.set_title('Resíduos X Previsão', fontsize=18)
+ax.set_xlabel('Consumo de Cerveja (litros) - Previsão', fontsize=14)
+ax.set_ylabel('Resíduos²', fontsize=14)
+ax
 
 """## Plotando a distribuição de frequências dos resíduos"""
 
-
+ax = sns.distplot(residuo)
+ax.figure.set_size_inches(12, 6)
+ax.set_title('Distribuição de Frequências dos Resíduos', fontsize=18)
+ax.set_xlabel('Litros', fontsize=14)
+ax
 
 """# <font color='red' style='font-size: 30px;'>Comparando Modelos</font>
 <hr style='border: 2px solid red;'>

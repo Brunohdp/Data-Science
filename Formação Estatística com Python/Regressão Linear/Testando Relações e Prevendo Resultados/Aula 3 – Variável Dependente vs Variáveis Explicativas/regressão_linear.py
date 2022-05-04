@@ -195,13 +195,15 @@ https://seaborn.pydata.org/generated/seaborn.pairplot.html?highlight=pairplot#se
 <p style='font-size: 18px; line-height: 2; margin: 10px 50px; text-align: justify;'>Plota o relacionamento entre pares de variáveis em um dataset.</p>
 """
 
-
+ax = sns.pairplot(dados)
 
 """## Plotando o pairplot fixando somente uma variável no eixo y"""
 
+ax = sns.pairplot(dados, y_vars='consumo', x_vars=['temp_min', 'temp_media', 'temp_max', 'chuva', 'fds'])
+ax.fig.suptitle('Dispersão entre as variáveis', fontsize=20, y=1.1)
 
-
-
+ax = sns.pairplot(dados, y_vars='consumo', x_vars=['temp_min', 'temp_media', 'temp_max', 'chuva', 'fds'], kind='reg')
+ax.fig.suptitle('Dispersão entre as variáveis', fontsize=20, y=1.1)
 
 """# <font color='red' style='font-size: 30px;'>Variável Dependente X Variáveis Explicativas (jointplot)</font>
 <hr style='border: 2px solid red;'>
@@ -213,11 +215,17 @@ https://seaborn.pydata.org/generated/seaborn.jointplot.html?highlight=jointplot#
 <p style='font-size: 18px; line-height: 2; margin: 10px 50px; text-align: justify;'>Plota o relacionamento entre duas variáveis e suas respectivas distribuições de frequência.</p>
 """
 
-
+ax = sns.jointplot(x="temp_max", y="consumo", data=dados)
+ax.fig.suptitle('Dispersao - Consumo X Temperatura', fontsize=18, y=1.05)
+ax.set_axis_labels("Temperatura Máxima", "Consumo de Cerveja", fontsize=14)
+ax
 
 """## Plotando um jointplot com a reta de regressão estimada"""
 
-
+ax = sns.jointplot(x="temp_max", y="consumo", data=dados, kind='reg')
+ax.fig.suptitle('Dispersão - Consumo X Temperatura', fontsize=18, y=1.05)
+ax.set_axis_labels("Temperatura Máxima", "Consumo de  Cerveja", fontsize=14)
+ax
 
 """# <font color='red' style='font-size: 30px;'>Variável Dependente X Variáveis Explicativas (lmplot)</font>
 <hr style='border: 2px solid red;'>
@@ -229,15 +237,28 @@ https://seaborn.pydata.org/generated/seaborn.lmplot.html?highlight=lmplot#seabor
 <p style='font-size: 18px; line-height: 2; margin: 10px 50px; text-align: justify;'>Plota a reta de regressão entre duas variáveis juntamente com a dispersão entre elas.</p>
 """
 
-
+ax= sns.lmplot(x="temp_max", y="consumo", data=dados)
+ax.fig.suptitle('Reta de Regressao - Consumo X Temperatura', fontsize=16, y=1.02)
+ax.set_xlabels("Temperatura Máxima (°C)", fontsize=14)
+ax.set_ylabels("Consumo de Cerveja (litros)", fontsize=14)
+ax
 
 """## Plotando um lmplot utilizando uma terceira variável na análise (tipo I)"""
 
-
+ax = sns.lmplot(x="temp_max", y="consumo", data=dados, hue="fds", markers=['o', '*'], legend=False)
+ax.fig.suptitle('Reta de Regressão - Consumo X Temperatura X Final de Semana', fontsize=16, y=1.02)
+ax.set_xlabels("Temperatura Máxima (°C)", fontsize=14)
+ax.set_ylabels("Consumo de Cerveja (litros)", fontsize=14)
+ax.add_legend(title="Fim de Semana")
+ax
 
 """## Plotando um lmplot utilizando uma terceira variável na análise (tipo II)"""
 
-
+ax = sns.lmplot(x="temp_max", y="consumo", data=dados, col="fds")
+ax.fig.suptitle('Reta de Regressão - Consumo X Temperatura X Final de Semana', fontsize=16, y=1.02)
+ax.set_xlabels("Temperatura Máxima (°C)", fontsize=14)
+ax.set_ylabels("Consumo de Cerveja (litros)", fontsize=14)
+ax
 
 """# <font color='red' style='font-size: 30px;'>Estimando um Modelo de Regressão Linear para o Consumo</font>
 <hr style='border: 2px solid red;'>
